@@ -1,0 +1,14 @@
+ID,Text,Comment
+Headcount.Inline,~{0},Expected population shown after the adult/kit counts
+Headcount.TooltipTitle,"At this pace, your population could settle around {0}",Steady state at current pod uptime
+Headcount.TooltipSplit,"Adults: about {0}, kits: about {1}",
+Headcount.TooltipNow,"Right now - adults: {0}, kits: {1}",
+Headcount.TooltipPods,"Pods: {0} running, {1} idle, {2} paused",Idle = missing nutrients or blocked
+Headcount.TooltipAdultPods,Pods that make adults: {0},Advanced Breeding Pods
+Headcount.TooltipUptime,Time unpaused pods spent growing recently: {0}%,
+Headcount.TooltipIfAllRun,"If all unpaused pods kept running, the estimate would be about {0}",
+Headcount.InlineHousing,/{0},Housing limit shown after the adult/kit counts
+Headcount.TooltipHousingTitle,Total beds: {0},
+Headcount.TooltipBeds,"Beds: {0} taken, {1} free",
+Headcount.TooltipHomeless,Without a bed: {0},
+Headcount.TooltipHousingRule,Kits need room at home to be born. More beds mean room to grow.,
