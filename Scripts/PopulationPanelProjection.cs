@@ -29,7 +29,6 @@ namespace Mods.Headcount.Scripts {
     private readonly ILoc _loc;
     private Label _projectionLabel;
     private SteadyStatePopulation _atCurrentUptime;
-    private SteadyStatePopulation _ifAllPodsRun;
     private float _nextRefreshTime;
     private Mode _mode;
     private bool _visible;
@@ -127,11 +126,8 @@ namespace Mods.Headcount.Scripts {
         var life = _lifeSurvey.Survey(includeKitBonuses: hasKitBirths);
         _atCurrentUptime = SteadyStatePopulation.Calculate(_podSurvey.ObservedKitBirthsPerDay,
                                                            _podSurvey.ObservedAdultBirthsPerDay, life);
-        _ifAllPodsRun = SteadyStatePopulation.Calculate(_podSurvey.PotentialKitBirthsPerDay,
-                                                        _podSurvey.PotentialAdultBirthsPerDay, life);
       } else {
         _atCurrentUptime = default;
-        _ifAllPodsRun = default;
       }
       _projectionLabel.text = _loc.T("Headcount.Inline", Round(_atCurrentUptime.Total));
     }
@@ -183,10 +179,6 @@ namespace Mods.Headcount.Scripts {
       if (_podSurvey.AdultPods > 0) {
         lines.Add(_loc.T("Headcount.TooltipAdultPods", _podSurvey.AdultPods));
       }
-      lines.Add(_loc.T("Headcount.TooltipUptime", Percent(CombinedUptime())));
-      if (Round(_ifAllPodsRun.Total) != Round(_atCurrentUptime.Total)) {
-        lines.Add(_loc.T("Headcount.TooltipIfAllRun", Round(_ifAllPodsRun.Total)));
-      }
       return string.Join("\n", lines);
     }
 
@@ -204,15 +196,7 @@ namespace Mods.Headcount.Scripts {
       return string.Join("\n", lines);
     }
 
-    private float CombinedUptime() {
-      var potential = _podSurvey.PotentialKitBirthsPerDay + _podSurvey.PotentialAdultBirthsPerDay;
-      var observed = _podSurvey.ObservedKitBirthsPerDay + _podSurvey.ObservedAdultBirthsPerDay;
-      return potential > 0f ? observed / potential : 0f;
-    }
-
     private static int Round(float value) => Mathf.RoundToInt(value);
-
-    private static int Percent(float fraction) => Mathf.RoundToInt(fraction * 100f);
 
   }
 }

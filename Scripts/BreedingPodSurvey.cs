@@ -20,7 +20,7 @@ namespace Mods.Headcount.Scripts {
     public int AdultPods { get; private set; }
     public int TotalPods => RunningPods + IdlePods + PausedPods;
 
-    // Births/day if every unpaused pod stays supplied.
+    // Births/day from unpaused pods if they stay supplied; paused pods never count.
     public float PotentialKitBirthsPerDay { get; private set; }
     public float PotentialAdultBirthsPerDay { get; private set; }
 

@@ -1,6 +1,6 @@
 {
   "Name": "Headcount",
-  "Version": "0.5.0",
+  "Version": "0.6.0",
   "Id": "acasperw.Headcount",
   "MinimumGameVersion": "1.1.0.0",
   "Description": "See how many beavers your breeding pods can support, or how many beds you have. Hover the number next to your population for details.",

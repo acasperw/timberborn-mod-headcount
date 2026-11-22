@@ -25,8 +25,6 @@ namespace Mods.Headcount.Scripts {
 
   }
 
-  // Averages the bonus multipliers the game actually applies to each living beaver, so
-  // well-being tiers, difficulty and other mods are all reflected without hardcoding tiers.
   public class ColonyLifeSurvey {
 
     private static readonly float MeanLongevity =
