@@ -1,21 +1,27 @@
-# Headcount – Breeding Pod Population Estimator
+# Headcount - Breeding Pod Population Projection
 
-How many breeding pods do your Iron Teeth need? Headcount estimates how many beavers your current pods can sustain and shows the answer beside your population counter.
+How many beavers can your Iron Teeth breeding pods support?
 
-A `~N` figure is added to the end of the population row
+## Iron Teeth
 
-The figure is colony-wide.
-It only appears once you have a finished breeding pod.
+The `~N` shows where your population could settle over time, based on how often your pods are running and how long your beavers live. It includes both standard and advanced breeding pods.
+
+Hover over this for more details.
+
+## Folktails
+
+The `/N` next to your population shows your bed count for the colony or selected district. Hover over it to see occupied and free beds, plus any beavers without a bed.
 
 ## How the breeding pod estimate is calculated
 
-Steady state: population = birth rate × how long each beaver lives.
+Steady state: population = birth rate × how long each beaver lives. 
 
 - Births per pod come from the pod's `CycleLengthInDays × CyclesUntilFullyGrown`.
-- Lifespan is the game's average lifespan, multiplied by the average `LifeExpectancy` bonus of your living adults. 
-
-- With base stats, one 5-day pod gives about 10 beavers, and grows with wellbeing bonus's
+- Lifespan is the game's average lifespan, multiplied by the average `LifeExpectancy` bonus of your living adults.
 
 ### Interesting side notes
 - Kits grow up in `DaysOfChildhood ÷ GrowthSpeed`. Their life clock keeps running during childhood, so adults born from kits live for the remainder of the lifespan.
 - Each beaver's has a random ±10% longevity.
+
+Available for Iron Teeth (and Folktails)
+Requires Timberborn 1.1.0 or later.
