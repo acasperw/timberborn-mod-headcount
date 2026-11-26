@@ -19,7 +19,7 @@ Steady state: population = birth rate × how long each beaver lives.
 - Births per pod come from the pod's [b]CycleLengthInDays × CyclesUntilFullyGrown[/b].
 - Lifespan is the game's average lifespan, multiplied by the average [b]LifeExpectancy[/b] bonus of your living adults.
 
-[h3]Interesting side note[/h3]
+[h3]Interesting side notes[/h3]
 - Kits grow up in `DaysOfChildhood ÷ GrowthSpeed`. Their life clock keeps running during childhood, so adults born from kits live for the remainder of the lifespan.
 - Each beaver's has a random ±10% longevity.
 

@@ -10,3 +10,4 @@ Headcount.TooltipHousingTitle,Total beds: {0},
 Headcount.TooltipBeds,"Beds: {0} taken, {1} free",
 Headcount.TooltipHomeless,Without a bed: {0},
 Headcount.TooltipHousingRule,Kits need room at home to be born. More beds mean room to grow.,
+Headcount.TooltipDistrict,District: {0},Shown when the panel is scoped to one district

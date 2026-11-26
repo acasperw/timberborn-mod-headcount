@@ -25,3 +25,8 @@ Steady state: population = birth rate × how long each beaver lives.
 
 Available for Iron Teeth (and Folktails)
 Requires Timberborn 1.1.0 or later.
+
+## Changelog
+
+### 0.7.0
+- Fix for selecting any building would hide pop estimate

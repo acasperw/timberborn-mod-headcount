@@ -1,6 +1,7 @@
 using Timberborn.Beavers;
 using Timberborn.BonusSystem;
 using Timberborn.Common;
+using Timberborn.GameDistricts;
 using Timberborn.LifeSystem;
 
 namespace Mods.Headcount.Scripts {
@@ -38,15 +39,16 @@ namespace Mods.Headcount.Scripts {
       _beaverPopulation = beaverPopulation;
     }
 
-    public ColonyLife Survey(bool includeKitBonuses = true) {
-      var beavers = _beaverPopulation._beaverCollection;
+    public ColonyLife Survey(DistrictCenter district = null, bool includeKitBonuses = true) {
+      var adults = district ? district.DistrictPopulation.Adults : _beaverPopulation._beaverCollection.Adults;
+      var children = district ? district.DistrictPopulation.Children : _beaverPopulation._beaverCollection.Children;
       var (kitLifeMultiplier, kitGrowthMultiplier) = includeKitBonuses
-          ? AverageKitMultipliers(beavers.Children)
+          ? AverageKitMultipliers(children)
           : (1f, 1f);
       return new ColonyLife(_lifeService._averageLifespan,
                             _lifeService._daysOfChildhood,
                             MeanLongevity,
-                            AverageMultiplier(beavers.Adults, LifeProgressor.LifeExpectancyBonusId),
+                            AverageMultiplier(adults, LifeProgressor.LifeExpectancyBonusId),
                             kitLifeMultiplier,
                             kitGrowthMultiplier);
     }

@@ -29,6 +29,7 @@ namespace Mods.Headcount.Scripts {
     private readonly ILoc _loc;
     private Label _projectionLabel;
     private SteadyStatePopulation _atCurrentUptime;
+    private DistrictCenter _district;
     private float _nextRefreshTime;
     private Mode _mode;
     private bool _visible;
@@ -74,6 +75,16 @@ namespace Mods.Headcount.Scripts {
       Refresh();
     }
 
+    [OnEvent]
+    public void OnDistrictSelected(DistrictSelectedEvent districtSelectedEvent) {
+      Refresh();
+    }
+
+    [OnEvent]
+    public void OnDistrictUnselected(DistrictUnselectedEvent districtUnselectedEvent) {
+      Refresh();
+    }
+
     public void UpdateSingleton() {
       if (Time.unscaledTime < _nextRefreshTime) {
         return;
@@ -103,13 +114,14 @@ namespace Mods.Headcount.Scripts {
         return;
       }
       _tooltipDirty = true;
-      _podSurvey.Sample();
-      _mode = _podSurvey.TotalPods > 0 ? Mode.BreedingPods
+      _nextRefreshTime = Time.unscaledTime + RefreshIntervalSeconds;
+      _district = _districtContextService.SelectedDistrict;
+      _podSurvey.Sample(_district);
+      _mode = _podSurvey.ColonyHasPods
+          ? (_podSurvey.TotalPods > 0 ? Mode.BreedingPods : Mode.None)
           : BreedsInHouses() ? Mode.Housing
           : Mode.None;
-      // Pod projections are colony-wide, so they hide while the panel shows a district.
-      var visible = _mode == Mode.Housing
-                    || (_mode == Mode.BreedingPods && !_districtContextService.SelectedDistrict);
+      var visible = _mode != Mode.None;
       if (_visible != visible) {
         _projectionLabel.ToggleDisplayStyle(visible);
         _visible = visible;
@@ -123,7 +135,7 @@ namespace Mods.Headcount.Scripts {
       }
       var hasKitBirths = _podSurvey.PotentialKitBirthsPerDay > 0f;
       if (hasKitBirths || _podSurvey.PotentialAdultBirthsPerDay > 0f) {
-        var life = _lifeSurvey.Survey(includeKitBonuses: hasKitBirths);
+        var life = _lifeSurvey.Survey(_district, includeKitBonuses: hasKitBirths);
         _atCurrentUptime = SteadyStatePopulation.Calculate(_podSurvey.ObservedKitBirthsPerDay,
                                                            _podSurvey.ObservedAdultBirthsPerDay, life);
       } else {
@@ -143,14 +155,12 @@ namespace Mods.Headcount.Scripts {
     private static int TotalBeds(BedData beds) => beds.OccupiedBeds + beds.FreeBeds;
 
     private string GetTooltip() {
-      if (_mode == Mode.Housing) {
-        var data = _populationPanel.GetContextualPopulationData();
-        return GetCachedTooltip(data.NumberOfAdults, data.NumberOfChildren, data.BedData);
-      }
-      if (_mode != Mode.BreedingPods) {
+      if (_mode == Mode.None) {
         return "";
       }
-      return GetCachedTooltip(_beaverPopulation.NumberOfAdults, _beaverPopulation.NumberOfChildren, default);
+      var data = _populationPanel.GetContextualPopulationData();
+      return GetCachedTooltip(data.NumberOfAdults, data.NumberOfChildren,
+                              _mode == Mode.Housing ? data.BedData : default);
     }
 
     private string GetCachedTooltip(int adults, int children, BedData beds) {
@@ -168,14 +178,18 @@ namespace Mods.Headcount.Scripts {
     }
 
     private string GetPodTooltip(int adults, int children) {
-      var lines = new List<string> {
+      var lines = new List<string>();
+      if (_district) {
+        lines.Add(_loc.T("Headcount.TooltipDistrict", _district.DistrictName));
+      }
+      lines.AddRange(new[] {
           _loc.T("Headcount.TooltipTitle", Round(_atCurrentUptime.Total)),
           _loc.T("Headcount.TooltipSplit", Round(_atCurrentUptime.Adults), Round(_atCurrentUptime.Kits)),
           _loc.T("Headcount.TooltipNow", adults, children),
           "",
           _loc.T("Headcount.TooltipPods", _podSurvey.RunningPods, _podSurvey.IdlePods,
                  _podSurvey.PausedPods)
-      };
+      });
       if (_podSurvey.AdultPods > 0) {
         lines.Add(_loc.T("Headcount.TooltipAdultPods", _podSurvey.AdultPods));
       }
@@ -183,11 +197,15 @@ namespace Mods.Headcount.Scripts {
     }
 
     private string GetHousingTooltip(int adults, int children, BedData beds) {
-      var lines = new List<string> {
+      var lines = new List<string>();
+      if (_district) {
+        lines.Add(_loc.T("Headcount.TooltipDistrict", _district.DistrictName));
+      }
+      lines.AddRange(new[] {
           _loc.T("Headcount.TooltipHousingTitle", TotalBeds(beds)),
           _loc.T("Headcount.TooltipNow", adults, children),
           _loc.T("Headcount.TooltipBeds", beds.OccupiedBeds, beds.FreeBeds)
-      };
+      });
       if (beds.Homeless > 0) {
         lines.Add(_loc.T("Headcount.TooltipHomeless", beds.Homeless));
       }
